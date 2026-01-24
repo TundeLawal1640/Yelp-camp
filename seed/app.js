@@ -20,7 +20,7 @@ mongoose
 
 app.set("view engine", "ejs");
 
-// Function to create a new campground
+// Function to (seed) create 50 new campground in the database
 const newCampGround = async () => {
   try {
     await Campground.deleteMany({});

@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 
 const Campground = require("./models/campground.js");
@@ -17,17 +18,13 @@ mongoose
   });
 
 // set view engine and views directory
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-
-//home route
-app.get("/", (req, res) => {
-  res.render("home");
-});
 
 // all campgrounds route
 app.get("/campgrounds", async (req, res) => {
@@ -40,7 +37,7 @@ app.get("/campgrounds/new", (req, res) => {
   res.render("campgrounds/new");
 });
 
-// post new campground to allCampground page route
+// Create a new campground | route
 app.post("/campgrounds", (req, res) => {
   const { name, location } = req.body;
   console.log(req.body);
@@ -56,7 +53,7 @@ app.get("/campgrounds/:id/edit", async (req, res) => {
   res.render("campgrounds/edit", { campground });
 });
 
-// Route update camp details route
+// Route to update camp details route
 app.patch("/campgrounds/:id/edit", async (req, res) => {
   const { id } = req.params;
   const { name, location } = req.body;

@@ -1,10 +1,28 @@
 <% layout('layouts/Boilerplate') %>
 
-<h1><%= campground.name %></h1>
-<h2><%= campground.location %></h2>
+<div class="container d-flex justify-content-center">
+  <div>
+    <h1><%= campground.name %></h1>
+    <h2><%= campground.location %></h2>
 
-<a href="/campgrounds/<%= campground._id %>/edit"> edit</a>
+    <img src="<%= campground.imageUrl %>" alt="Campground Image" /> <br />
 
-<form action="/campgrounds/<%= campground._id %>?_method=delete" method="POST">
-  <button>delete</button>
-</form>
+    <p><%= campground.description %></p>
+    <p><%= campground.price %></p>
+
+    <div class="d-flex gap-2">
+      <a href="/campgrounds/edit/<%= campground._id %>" class="btn btn-primary">
+        edit</a
+      >
+
+      <form
+        action="/campgrounds/<%= campground._id %>?_method=delete"
+        method="POST"
+      >
+        <button class="btn btn-danger">delete</button>
+      </form>
+    </div>
+
+    <a href="/campgrounds"> All Campgrounds</a>
+  </div>
+</div>

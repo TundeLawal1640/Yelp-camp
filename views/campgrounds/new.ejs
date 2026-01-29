@@ -1,15 +1,52 @@
 <% layout('layouts/Boilerplate') %>
 
-<form action="/campgrounds" method="post">
-  <div>
-    <h1>Create a new Campground</h1>
-    <label for="campId">Name</label>
-    <input type="text" placeholder="camp name" name="name" id="campId" />
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h1 class="mb-4 text-center">Create a new Campground</h1>
 
-    <label for="campLoc">location</label>
-    <input type="text" placeholder="location" name="location" id="campLoc" />
+      <form action="/campgrounds" method="post">
+        <div class="mb-3">
+          <label for="campName" class="form-label">Name</label>
+          <input
+            type="text"
+            placeholder="enter camp name"
+            name="name"
+            id="campName"
+            class="form-control"
+            required
+          />
+        </div>
 
-    <button>Create</button>
+        <div class="mb-3">
+          <label for="campLoc" class="form-label">Location</label>
+          <input
+            type="text"
+            placeholder="where is the camp located?"
+            name="location"
+            id="campLoc"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="campDesc" class="form-label">Description</label>
+          <textarea
+            placeholder="Briefly describe the campground"
+            name="description"
+            id="campDesc"
+            class="form-control"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">Create</button>
+          <a href="/campgrounds" class="btn btn-secondary">Back</a>
+        </div>
+      </form>
+    </div>
   </div>
-</form>
-<a href="/campgrounds">back </a>
+</div>

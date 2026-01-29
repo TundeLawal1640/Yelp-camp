@@ -1,22 +1,55 @@
 <% layout('layouts/Boilerplate') %>
 
 <form
-  action="/campgrounds/<%= campground._id %>/edit?_method=PATCH"
+  action="/campgrounds/edit/<%= campground._id %>?_method=PATCH"
   method="POST"
->
-  <div>
-    <h1>Edit Camp</h1>
-    <label for="campId">Name</label>
-    <input type="text" name="name" id="campId" value="<%= campground.name %>" />
-    <label for="campLoc">location</label>
-    <input
-      type="text"
-      name="location"
-      id="campLoc"
-      value="<%= campground.location %>"
-    />
+<div class="container py-4">
+  <h1 class="mb-4">Create a new Campground</h1>
 
-    <button>Submit</button>
-  </div>
+  <form action="/campgrounds" method="post">
+    <div class="mb-3">
+      <label for="campName" class="form-label">Name</label>
+      <input
+        type="text"
+        name="name"
+        value="<%= campground.name %>"
+        id="campName"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="campLoc" class="form-label">Location</label>
+      <input
+        type="text"
+        name="location"
+        value="<%= campground.location %>"
+        id="campLoc"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="campDesc" class="form-label">Description</label>
+      <!-- Description is usually multi-line, so textarea fits better than input -->
+      <textarea
+        name="description"
+        id="campDesc"
+        class="form-control"
+        rows="4"
+        required
+      >
+    <%= campground.description %>
+  </textarea>
+    </div>
+
+    <!-- align buttons nicely; remove mt-2 so they sit on the same baseline -->
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success">Update</button>
+      <a href="/campgrounds" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
 </form>
-<a href="/campgrounds">back </a>

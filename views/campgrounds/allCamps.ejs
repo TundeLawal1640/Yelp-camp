@@ -1,11 +1,48 @@
 <% layout('layouts/Boilerplate') %>
 
-    <h2>    <a href="/campgrounds/new">Create Camp</a></h2>
-    <ul>
-        <% for(let campground of campgrounds){ %>
+<div class="container py-4">
+  <!-- Page header -->
+  <div class="d-flex align-items-baseline justify-content-between mb-3">
+    <h2 class="mb-0">All Campgrounds</h2>
+    <a class="btn btn-primary btn-sm" href="/campgrounds/new">Create Camp</a>
+  </div>
 
-        <a href="/campgrounds/show/<%= campground._id %>">
-              <li><%= campground.name %> | <%= campground.location %></li>
-        </a>
-            <% } %>
-    </ul>
+  <% for (let campground of campgrounds) { %>
+    <!-- One campground = one centered block -->
+    <div class="row justify-content-center mb-4">
+      <!-- Constrain width so the content sits centered (like your arrow points to) -->
+      <div class="col-12 col-lg-10">
+        <!-- Inner row for image + card -->
+        <div class="row g-3 align-items-center">
+          <!-- Image column -->
+          <div class="col-12 col-md-4">
+            <img
+              class="img-fluid w-100 rounded"
+              src="<%= campground.imageUrl %>"
+              alt="<%= campground.name %> image"
+              style="aspect-ratio: 4 / 3; object-fit: cover;"
+            />
+          </div>
+
+          <!-- Card column -->
+          <div class="col-12 col-md-8">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title"><%= campground.name %></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  <%= campground.location %>
+                </h6>
+
+                <p class="card-text"><%= campground.description %></p>
+
+                <!-- Links -->
+                <a href="/campgrounds/show/<%= campground._id %>" class="card-link">View camp</a>
+                <a href="/campgrounds/edit/<%= campground._id %>" class="card-link">Edit camp</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>

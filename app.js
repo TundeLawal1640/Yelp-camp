@@ -44,13 +44,14 @@ app.get("/campgrounds/new", (req, res) => {
 
 // Route create POST req for a new campground and save to DB
 app.post("/campgrounds", async (req, res) => {
-  const { name, location, description } = req.body;
+  const { name, location, description, price } = req.body;
   const imageUrl = await getUnsplashApiImg();
 
   const newCampground = new Campground({
     name,
     location,
     description,
+    price,
     imageUrl,
   });
   await newCampground.save();
@@ -67,10 +68,10 @@ app.get("/campgrounds/edit/:id", async (req, res) => {
 // Route to update camp details route
 app.patch("/campgrounds/edit/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, location, description } = req.body;
+  const { name, location, description, price } = req.body;
   await Campground.findByIdAndUpdate(
     id,
-    { name, location, description },
+    { name, location, price, description },
     { runValidators: true },
   );
   res.redirect("/campgrounds");

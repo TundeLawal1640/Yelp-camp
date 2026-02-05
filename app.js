@@ -4,7 +4,13 @@ const app = express();
 require("dotenv").config();
 const mongoose = require("mongoose");
 const path = require("path");
+
 const ejsMate = require("ejs-mate");
+
+// importing Error Handler tools(joi) and Class(appError.js)
+const Joi = require("joi");
+const { joiCampgroundSchema } = require("./error_handler/joi_validation.js");
+const appError = require("./error_handler/appError.js");
 
 const { getUnsplashApiImg } = require("./utils/unsplash.js");
 
@@ -27,9 +33,25 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+
+const validate_campground_data = (req, res, next) => {
+  // Validate and check for errors in submitted data from (req.body)
+  const { error, value } = joiCampgroundSchema.validate(req.body);
+  //extract error message from joi
+  if (error) {
+    const msg = error.details.map((k) => k.message).join(",");
+    console.log(error);
+    throw new appError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 
 // Route render's all campgrounds
 app.get("/campgrounds", async (req, res) => {
@@ -37,16 +59,18 @@ app.get("/campgrounds", async (req, res) => {
   res.render("campgrounds/allCamps", { campgrounds });
 });
 
+
 // Route render's form to create aa new campground
 app.get("/campgrounds/new", (req, res) => {
   res.render("campgrounds/new");
 });
 
+
 // Route create POST req for a new campground and save to DB
-app.post("/campgrounds", async (req, res) => {
+app.post("/campgrounds", validate_campground_data, async (req, res, next) => {
+  // validated data (req.body)
   const { name, location, description, price } = req.body;
   const imageUrl = await getUnsplashApiImg();
-
   const newCampground = new Campground({
     name,
     location,
@@ -54,6 +78,7 @@ app.post("/campgrounds", async (req, res) => {
     price,
     imageUrl,
   });
+
   await newCampground.save();
   res.redirect("/campgrounds");
 });
@@ -66,16 +91,20 @@ app.get("/campgrounds/edit/:id", async (req, res) => {
 });
 
 // Route to update camp details route
-app.patch("/campgrounds/edit/:id", async (req, res) => {
-  const { id } = req.params;
-  const { name, location, description, price } = req.body;
-  await Campground.findByIdAndUpdate(
-    id,
-    { name, location, price, description },
-    { runValidators: true },
-  );
-  res.redirect("/campgrounds");
-});
+app.patch(
+  "/campgrounds/edit/:id",
+  validate_campground_data,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, location, description, price } = req.body;
+    await Campground.findByIdAndUpdate(
+      id,
+      { name, location, price, description },
+      { runValidators: true },
+    );
+    res.redirect("/campgrounds");
+  },
+);
 
 // Show route
 app.get("/campgrounds/show/:id", async (req, res) => {
@@ -94,6 +123,18 @@ app.delete("/campgrounds/:_id", async (req, res) => {
   res.redirect("/campgrounds");
 });
 
+// 404 handler - if url does not match any of the route
+app.use((req, res, next) => {
+  next(new appError("Page Not found", 404));
+});
+
+// Error handling route
+app.use((err, req, res, next) => {
+  const { message = "Internal Server Error", statusCode = 500, stack } = err;
+  res
+    .status(statusCode)
+    .render("campgrounds/errorTemplate", { message, statusCode, stack });
+});
 // start server
 app.listen(8080, () => {
   console.log("App listening on port 8080");

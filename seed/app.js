@@ -2,6 +2,8 @@
 require("dotenv").config({
   path: require("path").resolve(__dirname, "..", ".env"),
 });
+
+// Import mongoose,model,api function file, obj of camp names, descriptions & state details files.
 const mongoose = require("mongoose");
 const Campground = require("../models/campground.js");
 const { getUnsplashApiImg } = require("../utils/unsplash.js");

@@ -7,4 +7,9 @@ const joiCampgroundSchema = Joi.object({
   description: Joi.string().required(),
 }).required();
 
-module.exports = { joiCampgroundSchema };
+const joiReviewSchema = Joi.object({
+  rating: Joi.number().min(1).max(5).required(),
+  body: Joi.string().required(),
+}).required();
+
+module.exports = { joiCampgroundSchema, joiReviewSchema };

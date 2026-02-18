@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 // Setting authentication parameters & headers
 const unsplashApiImg = axios.create({
@@ -21,4 +21,4 @@ const getUnsplashApiImg = async () => {
 };
 
 //export function to be used in seed app.js
-module.exports = { getUnsplashApiImg, unsplashApiImg };
+export { getUnsplashApiImg, unsplashApiImg };

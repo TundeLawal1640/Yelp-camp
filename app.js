@@ -1,26 +1,48 @@
-const express = require("express");
+//importing express and creating an instance of it
+import express from "express";
 const app = express();
 
-require("dotenv").config();
-const mongoose = require("mongoose");
-const path = require("path");
+//importing dotenv to use environment variables
+import dotenv from "dotenv";
+dotenv.config();
 
-const ejsMate = require("ejs-mate");
+// importing mongoose to connect to a database
+import mongoose from "mongoose";
+
+//importing path to work with file and directory paths
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// to get the current file path and directory path
+import ejsMate from "ejs-mate";
+
+// importing campground routes
+import campground_routes from "./router/campground.js";
+
+// importing review routes
+import review_routes from "./router/review.js";
 
 // importing Error Handler tools(joi) and Class(appError.js)
-const Joi = require("joi");
-const {
+import Joi from "joi";
+import {
   joiCampgroundSchema,
   joiReviewSchema,
-} = require("./error_handler/joi_validation.js");
-const appError = require("./error_handler/appError.js");
+} from "./error_handler/joi_validation.js";
 
-const { getUnsplashApiImg } = require("./utils/unsplash.js");
+//importing appError class to create custom error
+import appError from "./error_handler/appError.js";
 
-const methodOverride = require("method-override");
+// importing function to get random image from unsplash api
+import { getUnsplashApiImg } from "./utils/unsplash.js";
 
-const Campground = require("./models/campground.js");
-const Review = require("./models/review.js");
+//importing method-override to use HTTP verbs
+import methodOverride from "method-override";
+
+//importing campground and review models
+import Campground from "./models/campground.js";
+import Review from "./models/review.js";
 
 // connect database
 mongoose
@@ -41,126 +63,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-const validate_campground_data = (req, res, next) => {
-  // Validate and check for errors in submitted data from (req.body)
-  const { error, value } = joiCampgroundSchema.validate(req.body);
-  //extract error message from joi
-  if (error) {
-    const msg = error.details.map((k) => k.message).join(",");
-    console.log(error);
-    throw new appError(msg, 400);
-  } else {
-    next();
-  }
-};
-
-// validate and check for error on submitted review data (req.body)
-
-const validate_review_data = async (req, res, next) => {
-  const { error, value } = joiReviewSchema.validate(req.body);
-  //extract error message from joi
-  if (error) {
-    const msg = error.details.map((k) => k.message).join(",");
-    console.log(error);
-    throw new appError(msg, 400);
-  } else {
-    next();
-  }
-};
-
-// Route render's all campgrounds
-app.get("/campgrounds", async (req, res) => {
-  const campgrounds = await Campground.find({});
-  res.render("campgrounds/allCamps", { campgrounds });
-});
-
-// Route render's form to create aa new campground
-app.get("/campgrounds/new", (req, res) => {
-  res.render("campgrounds/new");
-});
-
-// Route create POST req for a new campground and save to DB
-app.post("/campgrounds", validate_campground_data, async (req, res, next) => {
-  // validated data (req.body)
-  const { name, location, description, price } = req.body;
-  const imageUrl = await getUnsplashApiImg();
-  const newCampground = new Campground({
-    name,
-    location,
-    description,
-    price,
-    imageUrl,
-  });
-
-  await newCampground.save();
-  res.redirect("/campgrounds");
-});
-
-// Route that render form to edit camp details
-app.get("/campgrounds/edit/:id", async (req, res) => {
-  const { id } = req.params;
-  const campground = await Campground.findById(id);
-  res.render("campgrounds/edit", { campground });
-});
-
-// Route to update camp details route
-app.patch(
-  "/campgrounds/edit/:id",
-  validate_campground_data,
-  async (req, res) => {
-    const { id } = req.params;
-    const { name, location, description, price } = req.body;
-    await Campground.findByIdAndUpdate(
-      id,
-      { name, location, price, description },
-      { runValidators: true },
-    );
-    res.redirect("/campgrounds");
-  },
-);
-
-// Show route
-app.get("/campgrounds/show/:id", async (req, res) => {
-  const { id } = req.params;
-  const campground = await Campground.findById(id).populate("reviews");
-  if (!campground) {
-    return res.status(404).send("Campground not found");
-  }
-  res.render("campgrounds/show", { campground });
-});
-
-//Route to delete a campground
-app.delete("/campgrounds/:_id", async (req, res) => {
-  const { _id } = req.params;
-  const campground = await Campground.findByIdAndDelete({ _id });
-  res.redirect("/campgrounds");
-});
-
-// Route to make a new review for a campground
-app.post("/campgrounds/:_id/review", validate_review_data, async (req, res) => {
-  const { _id } = req.params;
-  const campground = await Campground.findById(_id).populate("reviews");
-
-  if (!campground) {
-    return res.status(404).send("Campground not found");
-  }
-
-  const { rating, body } = req.body;
-  const new_review = await Review.create({ rating, body });
-  campground.reviews.push(new_review);
-  await campground.save();
-  res.redirect(`/campgrounds/show/${_id}`);
-});
-
-//Route to delete a review | comment on a campground
-app.delete("/campgrounds/:id/review/:newReviewId", async (req, res, next) => {
-  const { id, newReviewId } = req.params;
-
-  //pull out newReviewId from reviews field in campground
-  await Campground.findByIdAndUpdate(id, { $pull: { reviews: newReviewId } });
-  await Review.findByIdAndDelete(newReviewId);
-  res.redirect(`/campgrounds/show/${id}`);
-});
+// use campground and review routes
+app.use("/campgrounds", campground_routes);
+// use review routes with campground id as params
+app.use("/campgrounds", review_routes);
 
 // 404 handler - if url does not match any of the route
 app.use((req, res, next) => {

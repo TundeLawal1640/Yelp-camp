@@ -325,4 +325,4 @@ const stateDetails = [
   },
 ];
 
-module.exports = { stateDetails };
+export { stateDetails };

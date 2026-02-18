@@ -1,4 +1,4 @@
-const campname = [
+const camp_name = [
   { name: "Forest Camp" },
   { name: "Savanna Camp" },
   { name: "Highland Camp" },
@@ -60,4 +60,4 @@ const campname = [
   { name: "Keffi Camp" },
 ];
 
-module.exports = campname;
+export default camp_name;

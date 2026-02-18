@@ -16,4 +16,4 @@ const description = [
   "Desert Argungu – a mystical desert oasis campsite near ancient fishing grounds and golden dunes, where starry nights and cool oases offer respite, inviting adventurers to experience the quiet magic of arid landscapes and cultural heritage.",
 ];
 
-module.exports = { description };
+export { description };

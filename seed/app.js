@@ -1,15 +1,14 @@
 // Seed file to create 5 new campground in the database
-require("dotenv").config({
-  path: require("path").resolve(__dirname, "..", ".env"),
-});
+import dotenv from "dotenv";
+dotenv.config();
 
-// Import mongoose,model,api function file, obj of camp names, descriptions & state details files.
-const mongoose = require("mongoose");
-const Campground = require("../models/campground.js");
-const { getUnsplashApiImg } = require("../utils/unsplash.js");
-const campname = require("./campname.js");
-const { stateDetails } = require("./stateDetails.js");
-const { description } = require("./descriptor.js");
+// Import mongoose,model,api function import file, obj of camp names, descriptions & state details files.
+import mongoose from "mongoose";
+import Campground from "../models/campground.js";
+import { getUnsplashApiImg } from "../utils/unsplash.js";
+import campname from "./campname.js";
+import { stateDetails } from "./stateDetails.js";
+import { description } from "./descriptor.js";
 
 // Connect to MongoDB && run the newCampGround function after connection
 mongoose

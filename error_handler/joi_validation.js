@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const joiCampgroundSchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
@@ -12,4 +12,4 @@ const joiReviewSchema = Joi.object({
   body: Joi.string().required(),
 }).required();
 
-module.exports = { joiCampgroundSchema, joiReviewSchema };
+export { joiCampgroundSchema, joiReviewSchema };

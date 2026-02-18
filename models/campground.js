@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
-const Review = require("./review");
+import mongoose from "mongoose";
+import Review from "./review.js";
 
 const Schema = mongoose.Schema;
 
+// creating a schema for campground
 const CampGroundSchema = new Schema({
   name: String,
   price: Number,
@@ -13,7 +14,7 @@ const CampGroundSchema = new Schema({
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });
 
-// This logic middlewares triggers after a immediately a campground is deleted,
+// This logic middlewares is triggered immediately a campground is deleted,
 // it will also delete all the reviews associated with that campground
 // (findbyIdAndDelete triggers findOneAndDelete middleware)
 CampGroundSchema.post("findOneAndDelete", async (doc) => {
@@ -24,4 +25,4 @@ CampGroundSchema.post("findOneAndDelete", async (doc) => {
   }
 });
 
-module.exports = mongoose.model("Campground", CampGroundSchema);
+export default mongoose.model("Campground", CampGroundSchema);

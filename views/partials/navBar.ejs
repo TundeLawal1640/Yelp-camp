@@ -1,6 +1,12 @@
-<nav class="navbar navbar-expand-lg bg-body-secondary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">YelpCamp</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="/campgrounds">
+      YelpCamp
+    </a>
+
+    <!-- Mobile Toggle Button -->
     <button
       class="navbar-toggler"
       type="button"
@@ -12,12 +18,29 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav mx-auto fw-bold">
-        <a class="nav-link active" href="/campgrounds">Campgrounds</a>
-        <a class="nav-link active" href="/campgrounds/new">Create</a>
-        <a class="nav-link active" href="#">Edit</a>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse d-lg-flex align-items-center justify-content-between" id="navbarNavAltMarkup">
+
+      <!-- Main Site Navigation (Center Aligned) -->
+      <div class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex align-items-center">
+        <a class="nav-link" href="/campgrounds">Campgrounds</a>
+        <a class="nav-link" href="/campgrounds/new">Create Camp</a>
       </div>
+
+      <!-- Right-side Auth Section -->
+      <div class="navbar-nav d-flex flex-row align-items-center ms-lg-auto">
+        <% if(!currentUser) { %>
+          <a class="nav-link" href="/users/signin">Login</a>
+          <a class="nav-link" href="/users/signup">Register</a>
+        <% } else { %>
+          <span class="navbar-text text-light me-3 d-none d-lg-block">
+            Welcome, <b><%= currentUser.username %></b>
+          </span>
+          <a class="btn btn-primary btn-sm px-3" href="/users/logout">Logout</a>
+        <% } %>
+      </div>
+
     </div>
   </div>
 </nav>

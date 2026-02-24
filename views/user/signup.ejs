@@ -1,0 +1,58 @@
+<% layout('layouts/Boilerplate') %>
+
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h1 class="mb-4 text-center">Create a new Account</h1>
+
+      <form
+        action="/users/signup"
+        method="post"
+        class="row g-2 needs-validation"
+        novalidate
+      >
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            placeholder="enter email"
+            name="email"
+            id="email"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter a valid email.</div>
+        </div>
+
+        <div class="mb-3">
+          <!-- ← this was missing -->
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            placeholder="enter username"
+            name="username"
+            id="username"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter a valid username.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            placeholder="enter password"
+            name="password"
+            id="password"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter a password.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+      </form>
+    </div>
+  </div>
+</div>

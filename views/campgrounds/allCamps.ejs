@@ -39,8 +39,10 @@
                 <p class="card-text"><%= campground.description %></p>
 
                 <!-- Links -->
-                <a href="/campgrounds/show/<%= campground._id %>" class="card-link">View camp</a>
-                <a href="/campgrounds/edit/<%= campground._id %>" class="card-link">Edit camp</a>
+<a class="btn btn-primary ms-lg-2 btn-l px-3" href="/campgrounds/show/<%= campground._id %>">View camp</a>
+<a class="btn btn-primary ms-lg-2 btn-l px-3" href="/campgrounds/edit/<%= campground._id %>">Edit camp</a>
+
+
               </div>
             </div>
           </div>

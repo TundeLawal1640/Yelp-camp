@@ -4,6 +4,8 @@ import Campground from "../models/campground.js";
 import { getUnsplashApiImg } from "../utils/unsplash.js";
 import { joiCampgroundSchema } from "../error_handler/joi_validation.js";
 import appError from "../error_handler/appError.js";
+import campground from "../models/campground.js";
+import isAuthenticated from "../loginAuth/isAuthenticated.js";
 
 //function to validate campGround
 const validate_campground_data = (req, res, next) => {
@@ -12,7 +14,6 @@ const validate_campground_data = (req, res, next) => {
   //extract error message from joi
   if (error) {
     const msg = error.details.map((k) => k.message).join(",");
-    console.log(error);
     throw new appError(msg, 400);
   } else {
     next();
@@ -26,45 +27,69 @@ router.get("/", async (req, res) => {
 });
 
 // Route render's form to create aa new campground
-router.get("/new", (req, res) => {
+router.get("/new", isAuthenticated, (req, res) => {
   res.render("campgrounds/new");
 });
 
 // Route create POST req for a new campground and save to DB
-router.post("/", validate_campground_data, async (req, res, next) => {
-  // validated data (req.body)
-  const { name, location, description, price } = req.body;
-  const imageUrl = await getUnsplashApiImg();
-  const newCampground = new Campground({
-    name,
-    location,
-    description,
-    price,
-    imageUrl,
-  });
-
-  await newCampground.save();
-  res.redirect("/campgrounds");
-});
-
+router.post(
+  "/",
+  isAuthenticated,
+  validate_campground_data,
+  async (req, res, next) => {
+    try {
+      const { name, location, description, price } = req.body;
+      let imageUrl;
+      try {
+        imageUrl = await getUnsplashApiImg();
+      } catch (e) {
+        console.error("Unsplash error:", e);
+        imageUrl = "/images/placeholder.jpg"; // local fallback
+      }
+      const newCampground = new Campground({
+        name,
+        location,
+        description,
+        price,
+        imageUrl,
+      });
+      await newCampground.save();
+      req.flash("success", "Campground created successfully!");
+      res.redirect("/campgrounds");
+    } catch (err) {
+      req.flash("error", "Campground creation failed!");
+      next(err);
+    }
+  },
+);
 // Route that render form to edit camp details
-router.get("/edit/:id", async (req, res) => {
+router.get("/edit/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
   res.render("campgrounds/edit", { campground });
 });
 
 // Route to update camp details route
-router.patch("/edit/:id", validate_campground_data, async (req, res) => {
-  const { id } = req.params;
-  const { name, location, description, price } = req.body;
-  await Campground.findByIdAndUpdate(
-    id,
-    { name, location, price, description },
-    { runValidators: true },
-  );
-  res.redirect("/campgrounds");
-});
+router.patch(
+  "/edit/:id",
+  isAuthenticated,
+  validate_campground_data,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, location, description, price } = req.body;
+    const updatedCampground = await Campground.findByIdAndUpdate(
+      id,
+      { name, location, price, description },
+      { runValidators: true, new: true },
+    );
+    if (!updatedCampground) {
+      req.flash("error", "Campground not found!");
+      return res.status(404).redirect("/campgrounds");
+    }
+    req.flash("success", "Campground updated successfully!");
+    res.redirect("/campgrounds");
+  },
+);
 
 // Show route
 router.get("/show/:id", async (req, res) => {
@@ -80,6 +105,7 @@ router.get("/show/:id", async (req, res) => {
 router.delete("/:_id", async (req, res) => {
   const { _id } = req.params;
   const campground = await Campground.findByIdAndDelete({ _id });
+  req.flash("success", "Campground deleted successfully!");
   res.redirect("/campgrounds");
 });
 

@@ -1,13 +1,16 @@
-//importing express and creating an instance of it
-import express from "express";
-const app = express();
-
 //importing dotenv to use environment variables
 import dotenv from "dotenv";
 dotenv.config();
 
-// importing mongoose to connect to a database
-import mongoose from "mongoose";
+//importing express and creating an instance of it
+import express from "express";
+const app = express();
+
+// importing session to use express-session for session management
+import session from "express-session";
+
+//importing connect-flash to use flash messages for success and error notifications
+import flash from "connect-flash";
 
 //importing path to work with file and directory paths
 import path from "path";
@@ -23,6 +26,9 @@ import campground_routes from "./router/campground.js";
 
 // importing review routes
 import review_routes from "./router/review.js";
+
+// importing user routes
+import users_routes from "./router/user.js";
 
 // importing Error Handler tools(joi) and Class(appError.js)
 import Joi from "joi";
@@ -44,6 +50,13 @@ import methodOverride from "method-override";
 import Campground from "./models/campground.js";
 import Review from "./models/review.js";
 
+// importing passport and passport-local for authentication
+import passport from "passport";
+import LocalStrategy from "passport-local";
+import User from "./models/user.js";
+
+// importing mongoose to connect to a database
+import mongoose from "mongoose";
 // connect database
 mongoose
   .connect("mongodb://127.0.0.1:27017/Yelp-camp")
@@ -63,10 +76,50 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// use campground and review routes
+const sessionConfig = {
+  secret: "thisisabadwayofsavinngasecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // session expires in a week
+    maxAge: 1000 * 60 * 60 * 24 * 7, // session expires in a week
+  },
+};
+
+//  session middleware with the defined configuration
+app.use(session(sessionConfig));
+
+// Middleware to set flash messages in res.locals for access in all views
+app.use(flash());
+
+// initialize passport and use passport session for persistent login sessions
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// This middleware passes variables to ALL your EJS templates automatically
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+// to serve static files in public directory
+app.use(express.static("public"));
+
+// Routes handles campground and related request
 app.use("/campgrounds", campground_routes);
+
 // use review routes with campground id as params
 app.use("/campgrounds", review_routes);
+
+// use user routes
+app.use("/users", users_routes);
 
 // 404 handler - if url does not match any of the route
 app.use((req, res, next) => {

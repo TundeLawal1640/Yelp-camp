@@ -1,3 +1,7 @@
+//importing dotenv to use environment variables
+import dotenv from "dotenv";
+dotenv.config();
+
 import axios from "axios";
 
 // Setting authentication parameters & headers

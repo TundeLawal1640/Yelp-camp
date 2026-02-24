@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Boilerplate</title>
+    <title>YelpCamp</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -11,47 +11,41 @@
       crossorigin="anonymous"
     />
   </head>
+
   <body class="d-flex flex-column min-vh-100">
     <%- include('../partials/navBar') %>
 
-    <main class="felx-grow-1"><%- body %></main>
+    <main class="flex-grow-1">
+      <!-- Flash message for success event -->
+      <%- include('../partials/flash') %>
+      <!-- main body | container -->
+      <%- body %>
+    </main>
 
     <%- include('../partials/footer') %>
-
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
       crossorigin="anonymous"
-    ></script>
+    >
+      // This script is used to add the functionality of the popper components
+    </script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
       integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
       crossorigin="anonymous"
-    ></script>
-    <script>
-      //  JavaScript for disabling form submissions if there are invalid fields
-      (() => {
-        "use strict";
+    >
+      // This script is used to add the functionality of the bootstrap components
+    </script>
 
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll(".needs-validation");
+    <script src="/javascript/formValidation.js">
+            // This script is used to validate the form before submitting it to the
+      server
+    </script>
 
-        // Loop over them and prevent submission
-        Array.from(forms).forEach((form) => {
-          form.addEventListener(
-            "submit",
-            (event) => {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-
-              form.classList.add("was-validated");
-            },
-            false,
-          );
-        });
-      })();
+    <script src="/javascript/flasDismissable.js">
+      // This script makes the flash messages dis-missable
     </script>
   </body>
 </html>

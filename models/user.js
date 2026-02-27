@@ -13,5 +13,5 @@ const userSchema = new Schema({
 // plugin adds: username, hash, salt, and auth methods
 userSchema.plugin(passportLocalMongoose.default);
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

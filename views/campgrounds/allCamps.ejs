@@ -37,10 +37,15 @@
                 </h6>
 
                 <p class="card-text"><%= campground.description %></p>
+                 <p><i>Posted by - <%= campground.author ? campground.author.username : "Unknown" %></i></p>
+
 
                 <!-- Links -->
 <a class="btn btn-primary ms-lg-2 btn-l px-3" href="/campgrounds/show/<%= campground._id %>">View camp</a>
-<a class="btn btn-primary ms-lg-2 btn-l px-3" href="/campgrounds/edit/<%= campground._id %>">Edit camp</a>
+<% if (currentUser && campground.author && campground.author.equals(currentUser._id)) { %>
+  <a class="btn btn-secondary ms-lg-2 btn-l px-3"
+     href="/campgrounds/edit/<%= campground._id %>">Edit camp</a>
+<% } %>
 
 
               </div>

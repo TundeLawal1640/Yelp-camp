@@ -1,6 +1,15 @@
 // Seed file to create 5 new campground in the database
 import dotenv from "dotenv";
 dotenv.config();
+import { fileURLToPath } from "url";
+import path from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "../.env") });
+// console.log("KEY:", process.env.UNSPLASH_ACCESS_KEY);
+// console.log("DEBUGGING KEYS:");
+// console.log("All Env Keys:", Object.keys(process.env));
+// console.log("Unsplash Key:", process.env.UNSPLASH_ACCESS_KEY);
 
 // Import mongoose,model,api function import file, obj of camp names, descriptions & state details files.
 import mongoose from "mongoose";
@@ -45,6 +54,7 @@ const newCampGround = async () => {
       }
 
       const newCamp = new Campground({
+        author: "699da83521083c28635ff8a7",
         name: `${campname[randomCampNameIndex].name}`,
         location: `${stateDetails[randomStateIndex].state}, ${stateDetails[randomStateIndex].city}`,
         imageUrl: `${imgUrl}`,

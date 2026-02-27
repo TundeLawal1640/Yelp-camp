@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import review_controller from "../controller/reviews.js";
 import Campground from "../models/campground.js";
 import appError from "../error_handler/appError.js";
 import Review from "../models/review.js";
@@ -24,31 +25,10 @@ router.post(
   "/:_id/review",
   isAuthenticated,
   validate_review_data,
-  async (req, res) => {
-    const { _id } = req.params;
-    const campground = await Campground.findById(_id).populate("reviews");
-
-    if (!campground) {
-      return res.status(404).send("Campground not found");
-    }
-
-    const { rating, body } = req.body;
-    const new_review = await Review.create({ rating, body });
-    campground.reviews.push(new_review);
-    await campground.save();
-    req.flash("success", "Your review have been added successfully!");
-    res.redirect(`/campgrounds/show/${_id}`);
-  },
+  review_controller.new_review,
 );
 
 //Route to delete a review | comment on a campground
-router.delete("/:id/review/:newReviewId", async (req, res, next) => {
-  const { id, newReviewId } = req.params;
+router.delete("/:id/review/:newReviewId", review_controller.delete_review);
 
-  //pull out newReviewId from reviews field in campground
-  await Campground.findByIdAndUpdate(id, { $pull: { reviews: newReviewId } });
-  await Review.findByIdAndDelete(newReviewId);
-  req.flash("success", "You have successfully deleted your review!");
-  res.redirect(`/campgrounds/show/${id}`);
-});
 export default router;

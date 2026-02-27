@@ -1,7 +1,9 @@
 import express from "express";
 const router = express.Router();
+import users_controller from "../controller/users.js";
 import passport from "passport";
 import User from "../models/user.js";
+import users from "../controller/users.js";
 
 //This extract value of intended Url from session and avail it res.locals
 // before deletion by passport.authenticate()
@@ -13,37 +15,13 @@ const redirectUrl = (req, res, next) => {
 };
 
 // route renders signup form
-router.get("/signup", (req, res) => {
-  res.render("user/signup");
-});
+router.get("/signup", users_controller.signup_form);
 
 //route handles signup
-router.post("/signup", async (req, res, next) => {
-  try {
-    const { username, password, email } = req.body;
-    const user = new User({ username, email });
-    const registeredUser = await User.register(user, password);
-
-    //extract the intended URL from the session, or default to "/campgrounds" before exec login() to avoid wipe out
-    const redirectUrl = req.session.returnToUrl || "/campgrounds";
-
-    //This method login the user immediately after registration,
-    // so they don't have to login again after signing up
-    req.login(registeredUser, (error) => {
-      if (error) return next(error);
-      req.flash("success", `You are welcome to yelpcamp, ${username}`);
-      res.redirect(redirectUrl);
-    });
-  } catch (error) {
-    req.flash("error", error.message);
-    res.redirect("/users/signup");
-  }
-});
+router.post("/signup", users_controller.signup);
 
 // route renders signin form
-router.get("/signin", (req, res) => {
-  res.render("user/signin");
-});
+router.get("/signin", users_controller.signin_form);
 
 //route handles signing in
 router.post(
@@ -53,18 +31,9 @@ router.post(
     failureFlash: true,
     failureRedirect: "users/login",
   }),
-  (req, res) => {
-    const redirectUrl = res.locals.returnToUrl || "/campgrounds";
-    req.flash("success", "Welcome back!");
-    res.redirect(redirectUrl);
-  },
+  users_controller.signin,
 );
 
-router.get("/logout", (req, res) => {
-  req.flash("success", "You have successfully logged out!");
-  req.logout(() => {
-    res.redirect("/campgrounds");
-  });
-});
+router.get("/logout", users_controller.logout);
 
 export default router;

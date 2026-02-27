@@ -48,12 +48,12 @@ import methodOverride from "method-override";
 
 //importing campground and review models
 import Campground from "./models/campground.js";
+import User from "./models/user.js";
 import Review from "./models/review.js";
 
 // importing passport and passport-local for authentication
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import User from "./models/user.js";
 
 // importing mongoose to connect to a database
 import mongoose from "mongoose";

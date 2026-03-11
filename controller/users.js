@@ -37,7 +37,7 @@ const signin_form = (req, res) => {
 const logout = (req, res) => {
   req.flash("success", "You have successfully logged out!");
   req.logout(() => {
-    res.redirect("/campgrounds");
+    res.redirect("/campgrounds/home");
   });
 };
 

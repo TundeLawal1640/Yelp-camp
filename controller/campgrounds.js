@@ -1,11 +1,34 @@
 import Campground from "../models/campground.js";
 import { getUnsplashApiImg } from "../utils/unsplash.js";
 
-// function renders campgrounds
+//functions that render home page
+const home = (req, res) => {
+  res.render("campgrounds/home");
+};
+
+// Main index - used by both /campgrounds and search
 const index = async (req, res, next) => {
   try {
-    const campgrounds = await Campground.find({}).populate("author");
-    res.render("campgrounds/allCamps", { campgrounds });
+    const { search } = req.query;
+    let campgrounds;
+
+    if (search && search.trim()) {
+      // Search with text index
+      campgrounds = await Campground.find(
+        { $text: { $search: search.trim() } },
+        { score: { $meta: "textScore" } },
+      )
+        .sort({ score: { $meta: "textScore" } })
+        .populate("author");
+    } else {
+      // No search - show all
+      campgrounds = await Campground.find({}).populate("author");
+    }
+
+    res.render("campgrounds/allCamps", {
+      campgrounds,
+      searchQuery: search || "",
+    });
   } catch (err) {
     next(err);
   }
@@ -19,28 +42,41 @@ const new_campground = (req, res) => {
 //function to create a new campground and save to DB
 const create_campground = async (req, res, next) => {
   try {
-    const { name, location, description, price } = req.body;
-    let imageUrl;
-    try {
-      imageUrl = await getUnsplashApiImg();
-    } catch (e) {
-      req.flash("error", "unable to fetch image");
-      console.error("Unsplash error:", e);
-      imageUrl = "/images/placeholder.jpg"; // local fallback
+    let images = [];
+
+    if (req.files && req.files.length > 0) {
+      images = req.files.map((file) => ({
+        url: file.path,
+        filename: file.filename,
+      }));
+      console.log(req.body, req.files);
+    } else {
+      // Fallback to Unsplash if no images uploaded
+      try {
+        const unsplashUrl = await getUnsplashApiImg();
+        images.push({ url: unsplashUrl, filename: null });
+      } catch (e) {
+        req.flash("error", "Unable to fetch image");
+        console.error("Unsplash error:", e);
+        images.push({ url: "/images/placeholder.jpg", filename: null });
+      }
     }
+
+    const { name, location, description, price } = req.body;
+
     const newCampground = new Campground({
       name,
       location,
       description,
       price,
-      imageUrl,
+      images,
     });
 
     // Set the author to the currently logged-in user
     newCampground.author = req.user._id;
     await newCampground.save();
     req.flash("success", "Campground created successfully!");
-    res.redirect(`/campgrounds/show/${newCampground._id}`);
+    res.redirect(`/campgrounds/${newCampground._id}`);
   } catch (err) {
     req.flash("error", "Campground creation failed!");
     next(err);
@@ -96,6 +132,7 @@ const delete_campground = async (req, res) => {
 
 // export the functions as an object
 export default {
+  home,
   index,
   new_campground,
   create_campground,

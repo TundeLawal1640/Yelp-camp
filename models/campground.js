@@ -10,9 +10,21 @@ const CampGroundSchema = new Schema({
   location: String,
   description: String,
   stateDetails: String,
-  imageUrl: String,
+  imageUrl: mongoose.Schema.Types.Mixed,
+  images: [
+    {
+      url: String,
+      filename: String,
+    },
+  ],
   author: { type: Schema.Types.ObjectId, ref: "User" },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+});
+
+CampGroundSchema.index({
+  name: "text",
+  location: "text",
+  description: "text",
 });
 
 // This logic middlewares is triggered immediately a campground is deleted,

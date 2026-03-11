@@ -57,7 +57,7 @@ const newCampGround = async () => {
         author: "699da83521083c28635ff8a7",
         name: `${campname[randomCampNameIndex].name}`,
         location: `${stateDetails[randomStateIndex].state}, ${stateDetails[randomStateIndex].city}`,
-        imageUrl: `${imgUrl}`,
+        images: [{ url: imgUrl, filename: null }],
         description: `${description[randomDescriptionIndex]}`,
         price: randomPrice,
       });

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // uses Bootstrap's Alert instance to trigger the fade-out animation cleanly
         const bsAlert = bootstrap.Alert.getOrCreateInstance(alertEl);
         bsAlert.close();
-      }, 3000); // disappears after 4 seconds
+      }, 5000); // disappears after 4 seconds
     }
   });
 });

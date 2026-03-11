@@ -1,0 +1,59 @@
+/* public/stylesheets/app.css */
+
+body {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.yc-navbar {
+  background: rgba(20, 20, 20, 0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.yc-brand {
+  letter-spacing: 0.5px;
+}
+
+.yc-search-form {
+  max-width: 420px;
+}
+
+.yc-search-group {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50rem;
+  overflow: hidden;
+}
+
+.yc-search-icon {
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.yc-search-input {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.yc-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.yc-search-input:focus {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white;
+  box-shadow: none;
+}
+
+.navbar .btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.navbar .btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.navbar .btn-outline-danger:hover {
+  background-color: rgba(220, 53, 69, 0.15);
+}

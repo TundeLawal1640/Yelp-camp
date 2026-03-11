@@ -1,53 +1,46 @@
 <% layout('layouts/Boilerplate') %>
 
 <div class="container py-4">
-  <!-- Page header -->
   <div class="d-flex align-items-baseline justify-content-between mb-3">
     <h2 class="mb-0">All Campgrounds</h2>
     <a class="btn btn-primary btn-sm" href="/campgrounds/new">Create Camp</a>
   </div>
 
   <% for (let campground of campgrounds) { %>
-    <!-- One campground = one centered block -->
     <div class="row justify-content-center mb-4">
-      <!-- Constrain width so the content sits centered (like your arrow points to) -->
       <div class="col-12 col-lg-10">
-        <!-- Inner row for image + card -->
         <div class="row g-3 align-items-center">
-          <!-- Image column -->
           <div class="col-12 col-md-4">
+            <%
+              let imageSrc = "/images/placeholder.jpg";
+              if (campground.images && campground.images.length > 0) {
+                imageSrc = campground.images[0].url || campground.images[0];
+              } else if (Array.isArray(campground.imageUrl) && campground.imageUrl.length > 0) {
+                        imageSrc = campground.imageUrl[0];
+                      }
+            %>
             <img
-              class="img-fluid w-100 rounded"
-              src="<%= campground.imageUrl %>"
-              alt="<%= campground.name %> image"
-              style="aspect-ratio: 4 / 3; object-fit: cover;"
-            />
+              src="<%= imageSrc %>"
+              class="card-img-top"
+              alt="Camp image"
+              style="height: 220px; object-fit: cover;"
+              onerror="this.onerror=null;this.src='/images/placeholder.jpg';"
+            >
           </div>
 
-          <!-- Card column -->
           <div class="col-12 col-md-8">
             <div class="card h-100">
               <div class="card-body">
                 <h5 class="card-title"><%= campground.name %></h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  <%= campground.location %>
-                </h6>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  $<%= campground.price %>
-                </h6>
-
+                <h6 class="card-subtitle mb-2 text-body-secondary"><%= campground.location %></h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">&#36;<%= campground.price %></h6>
                 <p class="card-text"><%= campground.description %></p>
-                 <p><i>Posted by - <%= campground.author ? campground.author.username : "Unknown" %></i></p>
+                <p><i>Posted by - <%= campground.author ? campground.author.username : "Unknown" %></i></p>
 
-
-                <!-- Links -->
-<a class="btn btn-primary ms-lg-2 btn-l px-3" href="/campgrounds/show/<%= campground._id %>">View camp</a>
-<% if (currentUser && campground.author && campground.author.equals(currentUser._id)) { %>
-  <a class="btn btn-secondary ms-lg-2 btn-l px-3"
-     href="/campgrounds/edit/<%= campground._id %>">Edit camp</a>
-<% } %>
-
-
+                <a class="btn btn-warning text-dark fw-semibold ms-lg-2 px-3" href="/campgrounds/<%= campground._id %>">View camp</a>
+                <% if (currentUser && campground.author && campground.author.equals(currentUser._id)) { %>
+                  <a class="btn btn-outline-dark ms-lg-2 px-3" href="/campgrounds/edit/<%= campground._id %>">Edit camp</a>
+                <% } %>
               </div>
             </div>
           </div>

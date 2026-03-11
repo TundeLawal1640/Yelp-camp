@@ -1,46 +1,92 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm"
+     style="background: rgba(20,20,20,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.07);">
   <div class="container">
 
     <!-- Brand -->
-    <a class="navbar-brand fw-bold d-flex align-items-center" href="/campgrounds">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2 fs-4 text-decoration-none"
+       href="/campgrounds">
+      <i class="bi bi-globe-americas text-warning"></i>
       YelpCamp
     </a>
 
-    <!-- Mobile Toggle Button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler border-0 shadow-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar Links -->
-    <div class="collapse navbar-collapse d-lg-flex align-items-center justify-content-between" id="navbarNavAltMarkup">
+    <!-- Collapsible Section -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
 
-      <!-- Main Site Navigation (Center Aligned) -->
-      <div class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex align-items-center">
-        <a class="nav-link" href="/campgrounds">Campgrounds</a>
-        <a class="nav-link" href="/campgrounds/new">Create Camp</a>
-      </div>
-
-      <!-- Right-side Auth Section -->
-      <div class="navbar-nav d-flex flex-row align-items-center ms-lg-auto">
-        <% if(!currentUser) { %>
-          <a class="nav-link" href="/users/signin">Login</a>
-          <a class="nav-link" href="/users/signup">Register</a>
-        <% } else { %>
-          <span class="navbar-text text-light me-3 d-none d-lg-block">
-            Welcome, <b><%= currentUser.username %></b>
+      <!-- CENTER: Search Bar -->
+      <form class="d-flex mx-auto my-2 my-lg-0 w-100" style="max-width: 420px;"
+            action="/campgrounds" method="GET" role="search">
+        <div class="input-group rounded-pill overflow-hidden border border-white border-opacity-25">
+          <span class="input-group-text border-0 text-white-50 navbar-search-addon">
+            <i class="bi bi-search"></i>
           </span>
-          <a class="btn btn-primary btn-sm px-3" href="/users/logout">Logout</a>
+          <input type="search"
+                 name="search"
+                 class="form-control border-0 shadow-none navbar-search-input"
+                 placeholder="Search campgrounds..."
+                 aria-label="Search campgrounds"
+                 value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" />
+          <button class="btn btn-warning fw-semibold px-3 text-dark" type="submit">Search</button>
+        </div>
+      </form>
+
+      <!-- RIGHT: Auth Section -->
+      <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0 flex-wrap justify-content-center justify-content-lg-end">
+        <% if (!currentUser) { %>
+          <!-- Login Button -->
+          <a class="btn btn-outline-light btn-sm rounded-pill px-3 fw-medium" href="/users/signin">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+          </a>
+          <!-- Register Button - Distinct from Create Camp -->
+          <a class="btn btn-light btn-sm rounded-pill px-3 fw-medium text-dark" href="/users/signup">
+            <i class="bi bi-person-plus me-1"></i>Register
+          </a>
+        <% } else { %>
+          <!-- Welcome Message -->
+          <span class="text-white-50 small d-none d-lg-inline">
+            <i class="bi bi-person-circle me-1 text-warning"></i>
+            Welcome, <span class="text-white fw-semibold"><%= currentUser.username %></span>
+          </span>
+          <!-- Logout Button -->
+          <a class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-medium" href="/users/logout">
+            <i class="bi bi-box-arrow-right me-1"></i>Logout
+          </a>
         <% } %>
       </div>
 
     </div>
   </div>
 </nav>
+
+<style>
+  .navbar-search-input {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .navbar-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .navbar-search-input:focus {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: white;
+    box-shadow: none;
+  }
+  .navbar-search-addon {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .btn-light:hover {
+    background-color: #e2e6ea;
+  }
+</style>

@@ -110,7 +110,11 @@ app.use((req, res, next) => {
   next();
 });
 // to serve static files in public directory
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.redirect("/campgrounds/home");
+});
 
 // Routes handles campground and related request
 app.use("/campgrounds", campground_routes);

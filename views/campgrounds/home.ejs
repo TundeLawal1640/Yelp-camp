@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YelpCamp | Welcome</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      .landing-page {
+        background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+          url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80")
+          center center / cover no-repeat;
+      }
+
+      .navbar-blur {
+        background: rgba(0, 0, 0, 0.45) !important;
+        backdrop-filter: blur(8px);
+      }
+
+      .nav-link:hover {
+        color: #f8d66d !important;
+      }
+    </style>
+  </head>
+
+  <body class="m-0 p-0">
+    <div class="landing-page min-vh-100 d-flex flex-column text-white">
+
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark navbar-blur sticky-top shadow-sm">
+        <div class="container">
+
+          <!-- Brand -->
+          <a class="navbar-brand fw-bold fs-4 letter-spacing-1" href="/">
+            YelpCamp
+          </a>
+
+          <!-- Mobile Toggle -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Navbar Links -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto align-items-lg-center gap-2">
+              <% if (!currentUser) { %>
+                <a class="nav-link fw-medium text-white" href="/users/signin">Login</a>
+                <a class="btn btn-outline-light rounded-pill px-3 py-1" href="/users/signup">Register</a>
+              <% } else { %>
+                <span class="navbar-text text-white me-lg-2 mb-2 mb-lg-0">
+                  Welcome, <strong><%= currentUser.username %></strong>
+                </span>
+                <a class="btn btn-danger rounded-pill px-3 py-1" href="/users/logout">Logout</a>
+              <% } %>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="flex-grow-1 d-flex align-items-center justify-content-center text-center px-3 py-5">
+        <div class="w-100" style="max-width: 750px;">
+          <h1 class="display-4 fw-bold mb-3">Welcome to YelpCamp</h1>
+          <p class="fs-5 text-white-50 mb-4 lh-base">
+            Discover breathtaking campgrounds, share your outdoor experiences,
+            and find the perfect place for your next adventure.
+            YelpCamp helps explorers connect with the best camping spots around the world.
+          </p>
+          <a
+            href="/campgrounds"
+            class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-semibold shadow text-dark"
+          >
+            View All Campgrounds
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

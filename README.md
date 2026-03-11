@@ -64,12 +64,12 @@ This project was built as a comprehensive full-stack application demonstrating r
 
 ## Project UI
 
-![home Page](image.png)
-![Signin page](image-1.png)
-![Register](image-2.png)
-![Create Canp](image-5.png)
-![All camps](image-3.png)
-![show page](image-4.png)
+![home Page](images/image.png)
+![Signin page](images/image-1.png)
+![Register](images/image-2.png)
+![Create Canp](images/image-3.png)
+![All camps](images/image-4.png)
+![show page](images/image-5.png)
 
 ---
 

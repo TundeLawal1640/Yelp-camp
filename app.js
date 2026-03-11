@@ -6,6 +6,9 @@ dotenv.config();
 import express from "express";
 const app = express();
 
+//helmet to set various HTTP headers for security
+import helmet, { contentSecurityPolicy } from "helmet";
+
 // importing session to use express-session for session management
 import session from "express-session";
 
@@ -73,6 +76,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Middleware
+// app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 

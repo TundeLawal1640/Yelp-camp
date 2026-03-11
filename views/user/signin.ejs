@@ -1,43 +1,93 @@
 <% layout('layouts/Boilerplate') %>
 
-<div class="container py-4">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <h1 class="mb-4 text-center">Sign In to Your Account</h1>
+<style>
+  .auth-container {
+    min-height: 85vh;
+  }
+
+  .auth-image {
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url("https://images.pexels.com/photos/6003106/pexels-photo-6003106.jpeg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .auth-overlay {
+    color: white;
+  }
+
+  .auth-overlay h2 {
+    font-weight: 700;
+  }
+
+  /* FIX LABEL VISIBILITY */
+  .form-label {
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  /* Optional UI polish */
+  .form-control {
+    border-radius: 8px;
+  }
+
+  .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.15rem rgba(255, 193, 7, 0.25);
+  }
+</style>
+
+<div class="container auth-container d-flex align-items-center">
+  <div class="row shadow-lg rounded overflow-hidden w-100">
+    <!-- Left Image Section -->
+    <div
+      class="col-md-6 d-none d-md-flex auth-image align-items-center justify-content-center"
+    >
+      <div class="text-center auth-overlay px-4">
+        <h2 class="mb-3">Join YelpCamp</h2>
+        <p class="opacity-75">
+          Discover breathtaking campgrounds and share your outdoor adventures
+          with explorers around the world.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Form Section -->
+    <div class="col-md-6 bg-white p-5">
+      <h3 class="text-center text-black mb-4">Sign in to Your Account</h3>
 
       <form
         action="/users/signin"
-        method="post"
-        class="row g-2 needs-validation"
+        method="POST"
+        class="needs-validation"
         novalidate
       >
         <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            placeholder="enter username"
-            name="username"
-            id="username"
-            class="form-control"
-            required
-          />
-          <div class="invalid-feedback">Please enter valid username.</div>
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" required />
+          <div class="invalid-feedback">Username is required.</div>
         </div>
 
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
+        <div class="mb-4">
+          <label class="form-label">Password</label>
           <input
             type="password"
-            placeholder="enter password"
             name="password"
-            id="password"
             class="form-control"
             required
           />
-          <div class="invalid-feedback">Please enter a password.</div>
+          <div class="invalid-feedback">Password is required.</div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Login</button>
+        <button type="submit" class="btn btn-primary w-100 fw-semibold">
+          login
+        </button>
+
+        <p class="text-center text-black mt-3 small">
+          Already have an account?
+          <a href="/users/signin">Login</a>
+        </p>
       </form>
     </div>
   </div>

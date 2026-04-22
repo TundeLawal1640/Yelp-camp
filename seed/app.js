@@ -20,8 +20,10 @@ import { stateDetails } from "./stateDetails.js";
 import { description } from "./descriptor.js";
 
 // Connect to MongoDB && run the newCampGround function after connection
+const dbUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Yelp-camp";
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Yelp-camp")
+  .connect(dbUrl)
   .then(async () => {
     console.log("Connected to a database");
     await newCampGround();
@@ -54,7 +56,7 @@ const newCampGround = async () => {
       }
 
       const newCamp = new Campground({
-        author: "699da83521083c28635ff8a7",
+        author: process.env.SEED_AUTHOR_ID || "699da83521083c28635ff8a7",
         name: `${campname[randomCampNameIndex].name}`,
         location: `${stateDetails[randomStateIndex].state}, ${stateDetails[randomStateIndex].city}`,
         images: [{ url: imgUrl, filename: null }],

@@ -60,15 +60,25 @@ import LocalStrategy from "passport-local";
 
 // importing mongoose to connect to a database
 import mongoose from "mongoose";
+
+const dbUrl = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Yelp-camp";
+
 // connect database
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Yelp-camp")
+  .connect(dbUrl)
   .then(() => {
-    console.log("Connected to a database");
+    const dbType = dbUrl.includes("mongodb+srv")
+      ? "MongoDB Atlas"
+      : "Local MongoDB";
+    console.log(`Connected to database: ${dbType}`);
   })
   .catch((e) => {
     console.log("unable to connect", e);
   });
+console.log("MONGODB_URI =", process.env.MONGODB_URI);
+
+//importing connect-mongo to use MongoDB as session store
+import MongoStore from "connect-mongo";
 
 // set view engine and views directory
 app.engine("ejs", ejsMate);
@@ -76,18 +86,35 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Middleware
-// app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+// session store configuration to use MongoDB for storing session data
+const sessionStore = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 60 * 60, //  only update session once per 24 hours
+  crypto: {
+    secret: process.env.SESSION_SECRET || "thisisabadwayofsavingasecret",
+  },
+});
+
+// Listen for session store errors
+sessionStore.on("error", function (e) {
+  console.log("SESSION STORE ERROR", e);
+});
+
 const sessionConfig = {
-  secret: "thisisabadwayofsavinngasecret",
+  store: sessionStore,
+  name: "session", // change the default session name for security
+  secret: process.env.SESSION_SECRET || "thisisabadwayofsavingasecret",
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // session expires in a week
-    maxAge: 1000 * 60 * 60 * 24 * 7, // session expires in a week
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    // secure: true, // we'll uncomment this for production later
   },
 };
 
@@ -141,7 +168,9 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .render("campgrounds/errorTemplate", { message, statusCode, stack });
 });
+
 // start server
-app.listen(8080, () => {
-  console.log("App listening on port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
 });

@@ -29,7 +29,7 @@ router.post(
   redirectUrl,
   passport.authenticate("local", {
     failureFlash: true,
-    failureRedirect: "users/login",
+    failureRedirect: "/users/signin",
   }),
   users_controller.signin,
 );
